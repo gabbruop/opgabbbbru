@@ -1,0 +1,132 @@
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PIS ONLINE COMPLAINT</title>
+    <link rel = "icon" href ="img/hiclipart.com.png"  type = "image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+        form.example input[type=text] {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 17px;
+            border: 1px solid grey;
+            float: left;
+            width: 80%;
+            background: #f1f1f1;
+            }
+
+        form.example button {
+            margin-top: 10px;
+            float: left;
+            width: 20%;
+            padding: 10px;
+            background: #4CAF50;;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+            }
+
+        form.example button:hover {
+            background: #47a14a;;
+            }
+
+        form.example::after {
+            content: "";
+            clear: both;
+            display: table;
+            }
+    </style>
+</head>
+<body>
+	<nav class="navbar navbar-default" style="background:#4CAF50;">
+		<div  class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" id ="logo" href="/" style="color: white;">
+                    <!-- <i class="fas fa-book"></i> -->
+                              <span>PARMARTH SCHOOL ONLINE COMPLAINT BY MADXARMY</span>
+
+                </a>
+            </div>
+            <div style="float: right;">
+                <ul class="nav navbar-nav" style="font-size: 1.1em">
+                    <li class="nav-item">
+						<a style="color: #A6D7A8;" class="nav-link" href="/" >Home</a>
+                    </li>
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a style="color: #A6D7A8;" class="nav-link" href="/allusers" >Users</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a style="color: #A6D7A8;" class="nav-link" href="/mycomplaints">My Complaints</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+						<a style="color: #A6D7A8;" class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+		</div>
+    </nav>
+    
+    <div class="container">
+        <h3>Subject: {{complaint.subject}}</h3>
+        <p>Posted on {{complaint.date}}</p><br>
+        <div class="media">
+            <div class="media-left">
+                <img src="{% static 'img/106434_user_512x512.png'%}" class="media-object" style="width:45px">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">{{complaint.username}} <small><i>Posted on {{complaint.date}}</i></small></h4>
+                <p>{{complaint.complaint}}</p>
+                <br>
+                {% for reply in replies %}
+                <div class="media">
+                    {% if reply.userstatus == 'user' %}
+                    <div class="media-left">
+                        <img src="{% static 'img/106434_user_512x512.png'%}" class="media-object" style="width:45px">
+                    </div>
+                    {% else %}
+                    <div class="media-left">
+                        <img src="{% static 'img/q2t34kjldqrqv0pl7ihh.png'%}" class="media-object" style="width:45px">
+                    </div>
+                    {% endif %}
+                    <div class="media-body">
+                        <h4 class="media-heading">{{reply.username}} <small><i>Posted on {{reply.date}}</i></small></h4>
+                        <p>{{reply.reply}}</p>                    
+                    </div>
+                    <br>
+                </div>
+                {% endfor %}
+                <div class="media" style="margin-bottom:150px;">
+                    <div class="media-body">
+                        <form class="example" action="/complaintreply" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{complaint.id}}" name="compt_id">
+                            <input type="text" placeholder="reply .." name="reply">
+                            <button type="submit">Reply</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+		  <span class="text-muted">BY GAVISH , PUNEET , TANISHQ AND RISHABH</span>
+		</div>
+	</footer>
+</body>
+</html>
